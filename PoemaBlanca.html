@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Blanca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night-1: #3A0F1E;
+    --night-2: #5C1830;
+    --parchment-1: #F6E8C8;
+    --parchment-2: #E9D0A0;
+    --parchment-edge: #D9B978;
+    --ink: #4A2130;
+    --ink-soft: #7A3B4F;
+    --rose: #C4426B;
+    --rose-deep: #8E2946;
+    --gold: #B8873B;
+    --gold-soft: #E7C77E;
+    --error: #FF8FA3;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0; padding:0; min-height:100vh;
+    font-family: 'Cormorant Garamond', serif;
+    background: radial-gradient(ellipse at 30% 20%, var(--night-2), var(--night-1) 70%);
+    color: var(--parchment-1);
+    overflow-x: hidden;
+  }
+
+  .script{ font-family: 'Dancing Script', cursive; }
+
+  /* corazones ambientales flotando en el fondo */
+  .floating-heart{
+    position: fixed;
+    bottom: -40px;
+    opacity: 0.35;
+    animation: float-up linear infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+  @keyframes float-up{
+    0%{ transform: translateY(0) rotate(0deg); opacity: 0; }
+    10%{ opacity: 0.35; }
+    90%{ opacity: 0.25; }
+    100%{ transform: translateY(-115vh) rotate(20deg); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .floating-heart{ animation: none; display: none; }
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  .stage{
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+  }
+
+  /* ---------- PANTALLA 1: CONTRASEÑA ---------- */
+  .gate-card{
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    background: linear-gradient(160deg, #F6E8C8, #EAD3A3);
+    border-radius: 22px;
+    padding: 44px 34px 38px;
+    text-align: center;
+    color: var(--ink);
+    box-shadow: 0 25px 70px -25px rgba(0,0,0,0.55);
+    animation: card-in 0.6s cubic-bezier(.2,.9,.25,1);
+  }
+  @keyframes card-in{
+    from{ opacity: 0; transform: translateY(18px) scale(0.97); }
+    to{ opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .gate-card.shake{ animation: shake 0.5s; }
+  @keyframes shake{
+    10%, 90% { transform: translateX(-1px); }
+    20%, 80% { transform: translateX(3px); }
+    30%, 50%, 70% { transform: translateX(-7px); }
+    40%, 60% { transform: translateX(7px); }
+  }
+
+  .heart-seal{
+    width: 74px; height: 74px;
+    margin: 0 auto 20px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #E58BA6, var(--rose-deep) 75%);
+    box-shadow: 0 10px 24px -8px rgba(142,41,70,0.55), inset 0 0 0 3px rgba(255,255,255,0.15);
+    animation: badge-pop 0.6s cubic-bezier(.2,1.1,.4,1);
+  }
+  @keyframes badge-pop{
+    0%{ transform: scale(0.6) rotate(-8deg); opacity: 0;}
+    100%{ transform: scale(1) rotate(0); opacity: 1;}
+  }
+  .heart-seal svg{ width: 34px; height: 34px; }
+
+  .eyebrow{
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rose-deep);
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+  .gate-title{
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+  .gate-sub{
+    font-size: 17px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin: 0 0 26px;
+  }
+
+  .field{ text-align: left; margin-bottom: 16px; }
+  .field label{
+    display:block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+  input[type="password"]{
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 2px solid var(--parchment-edge);
+    background: #FFFBF1;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.25s, background 0.25s;
+    text-align: center;
+    letter-spacing: 0.3em;
+  }
+  input:focus{ border-color: var(--rose); background: #fff; }
+  input.err{ border-color: var(--error); background: #FFEDF1; }
+
+  button.primary{
+    width: 100%;
+    padding: 15px 18px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+    color: #fff;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    box-shadow: 0 10px 24px -8px rgba(142,41,70,0.55);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  button.primary:hover{ transform: translateY(-2px); }
+  button.primary:active{ transform: translateY(0); }
+
+  .msg{
+    min-height: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 14px;
+    color: var(--rose-deep);
+  }
+  .hidden{ display: none !important; }
+
+  /* ---------- PANTALLA 2: PERGAMINO / POEMA ---------- */
+  .scroll-wrap{
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+  }
+
+  .scroll{
+    position: relative;
+    background:
+      radial-gradient(ellipse at 15% 10%, rgba(190,140,60,0.18), transparent 55%),
+      radial-gradient(ellipse at 85% 90%, rgba(190,140,60,0.18), transparent 55%),
+      linear-gradient(160deg, var(--parchment-1), var(--parchment-2));
+    color: var(--ink);
+    padding: 56px 54px 48px;
+    box-shadow: 0 30px 80px -25px rgba(0,0,0,0.6), inset 0 0 60px rgba(150,100,40,0.12);
+    clip-path: polygon(
+      0% 2%, 3% 0%, 8% 1.6%, 14% 0.3%, 20% 1.8%, 27% 0.2%, 34% 1.5%, 41% 0.4%,
+      48% 1.7%, 55% 0.3%, 62% 1.6%, 69% 0.2%, 76% 1.8%, 83% 0.4%, 90% 1.5%, 97% 0.2%, 100% 2%,
+      100% 98%, 97% 100%, 90% 98.4%, 83% 99.7%, 76% 98.2%, 69% 99.8%, 62% 98.5%, 55% 99.7%,
+      48% 98.3%, 41% 99.6%, 34% 98.5%, 27% 99.8%, 20% 98.2%, 14% 99.7%, 8% 98.4%, 3% 100%, 0% 98%
+    );
+    animation: card-in 0.7s cubic-bezier(.2,.9,.25,1);
+  }
+
+  .hearts-row{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .hearts-row svg{ width: 18px; height: 18px; opacity: 0.85; }
+
+  .hearts-side{
+    position: absolute;
+    top: 70px; bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0.55;
+  }
+  .hearts-side.left{ left: 14px; }
+  .hearts-side.right{ right: 14px; }
+  .hearts-side svg{ width: 15px; height: 15px; }
+
+  .poem-title{
+    font-family: 'Dancing Script', cursive;
+    font-size: 46px;
+    text-align: center;
+    color: var(--rose-deep);
+    margin: 6px 0 4px;
+    line-height: 1;
+  }
+  .poem-title-sub{
+    text-align: center;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin: 0 0 30px;
+  }
+
+  .divider{
+    width: 90px;
+    height: 2px;
+    margin: 0 auto 30px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  /* =====================================================
+     ✍️  ESCRIBE AQUÍ TU POEMA
+     Puedes añadir, quitar o cambiar los versos libremente.
+     Cada línea dentro de <p class="verso"> es una línea del poema.
+     Deja una línea vacía <p class="espacio"></p> entre estrofas si quieres separar.
+     ===================================================== */
+  .poem-text{
+    font-size: 22px;
+    line-height: 1.75;
+    text-align: center;
+    font-style: italic;
+    color: var(--ink);
+  }
+  .poem-text p{ margin: 0; }
+  .poem-text p.espacio{ height: 14px; }
+
+  .wax-seal{
+    width: 56px; height: 56px;
+    margin: 34px auto 6px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #E58BA6, var(--rose-deep) 75%);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 8px 18px -6px rgba(142,41,70,0.55), inset 0 0 0 2px rgba(255,255,255,0.18);
+  }
+  .wax-seal svg{ width: 26px; height: 26px; }
+
+  .signature{
+    text-align: center;
+    font-family: 'Dancing Script', cursive;
+    font-size: 22px;
+    color: var(--rose-deep);
+    margin-top: 10px;
+  }
+
+  @media (max-width: 480px){
+    .scroll{ padding: 46px 22px 40px; }
+    .poem-title{ font-size: 38px; }
+    .poem-text{ font-size: 19px; }
+    .hearts-side{ display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- PANTALLA 1: CONTRASEÑA -->
+  <div class="gate-card" id="screen-password">
+    <div class="heart-seal">
+      <svg viewBox="0 0 24 24" fill="#fff">
+        <path d="M12 21s-7.5-4.6-10-9.1C.4 8.6 2 5 5.6 5c2 0 3.4 1 4.4 2.4C11 6 12.4 5 14.4 5 18 5 19.6 8.6 22 11.9 19.5 16.4 12 21 12 21z"></path>
+      </svg>
+    </div>
+    <p class="eyebrow">Carta sellada</p>
+    <h1 class="gate-title">Solo para ti</h1>
+    <p class="gate-sub">Escribe la contraseña para abrir la carta.</p>
+
+    <div class="field">
+      <label for="password-input">Contraseña</label>
+      <input type="password" id="password-input" placeholder="••••" inputmode="numeric" autocomplete="off">
+    </div>
+    <button class="primary" id="btn-password">Abrir</button>
+    <p class="msg hidden" id="msg-password">Contraseña incorrecta. Inténtalo de nuevo.</p>
+  </div>
+
+  <!-- PANTALLA 2: PERGAMINO CON EL POEMA -->
+  <div class="scroll-wrap hidden" id="screen-poem">
+    <div class="scroll">
+
+      <div class="hearts-side left">
+        <svg viewBox="0 0 24 24" fill="#8E2946"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.6 2 5 5.6 5c2 0 3.4 1 4.4 2.4C11 6 12.4 5 14.4 5 18 5 19.6 8.6 22 11.9 19.5 16.4 12 21 12 21z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#B8873B"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.6 2 5 5.6 5c2 0 3.4 1 4.4 2.4C11 6 12.4 5 14.4 5 18 5 19.6 8.6 22 11.9 19.5 16.4 12 21 12 21z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#8E2946"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.6 2 5 5.6 5c2 0 3.4 1 4.4 2.4C11 6 12.4 5 14.4 5 18 5 19.6 8.6 22 11.9 19.5 16.4 12 21 12 21z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#B8873B"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.6 2 5 5.6 5c2 0 3.4 1 4.4 2.4C11 6 12.4 5 14.4 5 18 5 19.6 8.6 22 11.9 19.5 16.4 12 21 12 21z"/></svg>
+      </div>
+      <div class="hearts-side right">
+        <svg viewBox="0 0 24 24" fill="#B8873B"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.6 2 5 5.6 5c2 0 3.4 1 4.4 2.4C11 6 12.4 5 14.4 5 18 5 19.6 8.6 22 11.9 19.5 16.4 12 21 12 21z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#8E2946"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.6 2 5 5.6 5c2 0 3.4 1 4.4 2.4C11 6 12.4 5 14.4 5 18 5 19.6 8.6 22 11.9 19.5 16.4 12 21 12 21z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#B8873B"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.6 2 5 5.6 5c2 0 3.4 1 4.4 2.4C11 6 12.4 5 14.4 5 18 5 19.6 8.6 22 11.9 19.5 16.4 12 21 12 21z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#8E2946"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.6 2 5 5.6 5c2 0 3.4 1 4.4 2.4C11 6 12.4 5 14.4 5 18 5 19.6 8.6 22 11.9 19.5 16.4 12 21 12 21z"/></svg>
+      </div>
+
+      <div class="hearts-row">
+        <svg viewBox="0 0 24 24" fill="#8E2946"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.6 2 5 5.6 5c2 0 3.4 1 4.4 2.4C11 6 12.4 5 14.4 5 18 5 19.6 8.6 22 11.9 19.5 16.4 12 21 12 21z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#B8873B"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.6 2 5 5.6 5c2 0 3.4 1 4.4 2.4C11 6 12.4 5 14.4 5 18 5 19.6 8.6 22 11.9 19.5 16.4 12 21 12 21z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#8E2946"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.6 2 5 5.6 5c2 0 3.4 1 4.4 2.4C11 6 12.4 5 14.4 5 18 5 19.6 8.6 22 11.9 19.5 16.4 12 21 12 21z"/></svg>
+      </div>
+
+      <h1 class="poem-title">Blanca, te amo</h1>
+      <p class="poem-title-sub">Un poema para ti</p>
+      <div class="divider"></div>
+
+      <div class="poem-text">
+        <p>Mil te amos no bastan para decir lo que siento,</p>
+        <p>A tu lado, princesa, todos los dias son buenos.</p>
+        <p class="espacio"></p>
+        <p>Lo dulce que eres me hace quererte mas cada dia,</p>
+        <p>La sonrisa que tienes me hace escribir poesia.</p>
+        <p class="espacio"></p>
+        <p>Ojitos marrones en los que me pierdo en el tiempo,</p>
+        <p>Reirme contigo es como estar en el cielo.</p>
+        <p class="espacio"></p>
+        <p>Contigo me siento en paz y armonia,</p>
+        <p>Amarte asi, Blanquita, es mi unica fantasia.</p>
+      </div>
+
+      <div class="wax-seal">
+        <svg viewBox="0 0 24 24" fill="#fff">
+          <path d="M12 21s-7.5-4.6-10-9.1C.4 8.6 2 5 5.6 5c2 0 3.4 1 4.4 2.4C11 6 12.4 5 14.4 5 18 5 19.6 8.6 22 11.9 19.5 16.4 12 21 12 21z"></path>
+        </svg>
+      </div>
+      <p class="signature">Con todo mi corazón</p>
+      <p class="signature">Pregunta a quien tenga casa en...</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const PASSWORD = "lucifer";
+
+  const screenPassword = document.getElementById('screen-password');
+  const screenPoem = document.getElementById('screen-poem');
+  const passInput = document.getElementById('password-input');
+  const passMsg = document.getElementById('msg-password');
+
+  function shakeCard(card){
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+  }
+
+  function checkPassword(){
+    if(passInput.value === PASSWORD){
+      screenPassword.classList.add('hidden');
+      screenPoem.classList.remove('hidden');
+    } else {
+      passMsg.classList.remove('hidden');
+      passInput.classList.add('err');
+      shakeCard(screenPassword);
+      passInput.value = "";
+      passInput.focus();
+    }
+  }
+
+  document.getElementById('btn-password').addEventListener('click', checkPassword);
+  passInput.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') checkPassword();
+    passInput.classList.remove('err');
+  });
+
+  // corazones flotando de fondo
+  const heartSVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.6 2 5 5.6 5c2 0 3.4 1 4.4 2.4C11 6 12.4 5 14.4 5 18 5 19.6 8.6 22 11.9 19.5 16.4 12 21 12 21z"/></svg>';
+  const heartColors = ['#E58BA6', '#C4426B', '#E7C77E'];
+  for(let i = 0; i < 14; i++){
+    const h = document.createElement('div');
+    h.className = 'floating-heart';
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.width = (10 + Math.random() * 14) + 'px';
+    h.style.color = heartColors[Math.floor(Math.random() * heartColors.length)];
+    h.style.animationDuration = (10 + Math.random() * 10) + 's';
+    h.style.animationDelay = (Math.random() * 12) + 's';
+    h.innerHTML = heartSVG;
+    document.body.appendChild(h);
+  }
+</script>
+
+</body>
+</html>
